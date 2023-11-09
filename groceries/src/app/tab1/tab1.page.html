@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      {{title}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Grocery</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list [inset]="true">
+
+    <ion-item-sliding *ngFor="let item of items; let i = index">
+      <ion-item>
+        <ion-label>{{item.name}}</ion-label>
+        <p>{{item.quantity}}</p>
+      </ion-item>
+
+      <ion-item-options>
+        <ion-item-option color="danger" (click)="removeItem(item, i)"> Delete</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button id="present-alert" (click)="addItem()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-alert trigger="present-alert"
+             header="Add Item"
+             subHeader="Please enter item..."
+             [buttons]="alertButtons"
+             [inputs]="alertInputs"></ion-alert>
+
+</ion-content>
