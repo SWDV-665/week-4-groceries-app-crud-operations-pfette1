@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ToastController } from '@ionic/angular';
+import { GroceriesService } from '../../providers/groceries.service';
+import { InputDialogService } from '../../providers/input-dialog.service';
 
 @Component({
   selector: 'app-tab1',
@@ -10,26 +12,7 @@ export class Tab1Page {
 
   title = "Grocery";
 
-  items = [
-    {
-      name: "Milk",
-      quantity: 2
-    },
-    {
-      name: "Bread",
-      quantity: 3
-    },
-    {
-      name: "Apples",
-      quantity: 2
-    },
-    {
-      name: "Oranges",
-      quantity: 2
-    }
-  ]
-
-  public alertButtons = [
+  public addItemAlertButtons = [
     {
       text: 'Cancel',
       handler: (data: any) => {
@@ -38,11 +21,11 @@ export class Tab1Page {
     {
       text: 'Save',
       handler: (item: any) => {
-        this.items.push(item);
+        this.dataService.addItem(item);
       }
 }
   ];
-  public alertInputs = [
+  public addItemAlertInputs = [
     {
       name: 'name',
       placeholder: 'Name'
@@ -56,7 +39,14 @@ export class Tab1Page {
     }
   ];
 
-  constructor(private toastController: ToastController) {}
+  constructor(
+    private toastController: ToastController,
+    public dataService: GroceriesService,
+    public inputDialogService: InputDialogService) { }
+
+  loadItems() {
+    return this.dataService.getItems();
+  }
 
   async removeItem(item: any, index: number) {
     const toast = await this.toastController.create({
@@ -68,15 +58,33 @@ export class Tab1Page {
 
     await toast.present();
 
-    this.items.splice(index, 1);
+    this.dataService.removeItem(index);
   }
 
-  addItem() {
-    
+  async addItem() {
+    const toast = await this.toastController.create({
+      message: 'Adding item ...',
+      duration: 1500,
+      position: 'bottom',
+      color: 'success',
+    });
+
+    this.inputDialogService.showPrompt(toast);
+  }
+
+  async editItem(item: any, index: number) {
+    const toast = await this.toastController.create({
+      message: 'Editing item - ' + index + '...',
+      duration: 1500,
+      position: 'bottom',
+      color: 'success',
+    });
+
+    this.inputDialogService.showPrompt(toast, item, index);
   }
 
   dismiss() {
-    console.log(this.alertInputs);
+    console.log(this.addItemAlertInputs);
   }
 
 }
